@@ -6,11 +6,13 @@ import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -23,17 +25,17 @@ import java.util.OptionalInt;
  * events.
  */
 final class ChunkBlockCounts {
-	private final Map<ChunkPos, Object2IntMap<Block>> counts = new HashMap<>();
+	private final Map<LevelChunkPos, Object2IntMap<Block>> counts = new HashMap<>();
 	/** {sum of (section-center-Y * relevant-block-count), sum of relevant-block-count} per chunk. */
-	private final Map<ChunkPos, long[]> yWeights = new HashMap<>();
+	private final Map<LevelChunkPos, long[]> yWeights = new HashMap<>();
 
-	Object2IntMap<Block> get(ChunkPos pos) {
-		return counts.getOrDefault(pos, Object2IntMaps.emptyMap());
+	Object2IntMap<Block> get(ChunkPos pos, Level level) {
+		return counts.getOrDefault(new LevelChunkPos(pos,level), Object2IntMaps.emptyMap());
 	}
 
 	/** Weighted-average Y (at ~section, i.e. 16-block, precision) of relevant blocks in this chunk. */
-	OptionalInt centerY(ChunkPos pos) {
-		long[] weights = yWeights.get(pos);
+	OptionalInt centerY(ChunkPos pos, Level level) {
+		long[] weights = yWeights.get(new LevelChunkPos(pos, level));
 		if (weights == null || weights[1] == 0) {
 			return OptionalInt.empty();
 		}
@@ -43,8 +45,8 @@ final class ChunkBlockCounts {
 	void refresh(ServerLevel level, ChunkPos pos) {
 		LevelChunk chunk = level.getChunkSource().getChunkNow(pos.x(), pos.z());
 		if (chunk == null) {
-			counts.remove(pos);
-			yWeights.remove(pos);
+			counts.remove(new LevelChunkPos(pos, level));
+			yWeights.remove(new LevelChunkPos(pos, level));
 			return;
 		}
 
@@ -69,7 +71,7 @@ final class ChunkBlockCounts {
 			ySum += (long) sectionCenterY * sectionCount[0];
 			yCount += sectionCount[0];
 		}
-		counts.put(pos, tally);
-		yWeights.put(pos, new long[] {ySum, yCount});
+		counts.put(new LevelChunkPos(pos, level), tally);
+		yWeights.put(new LevelChunkPos(pos, level), new long[] {ySum, yCount});
 	}
 }

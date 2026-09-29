@@ -54,4 +54,6 @@ public record ChunkBiomeState(Optional<ResourceKey<Biome>> originalBiome, Option
 				Codec.INT.fieldOf("radius").forGetter(AppliedSphere::radius)
 		).apply(instance, AppliedSphere::new));
 	}
+
+	public static void init(){}
 }

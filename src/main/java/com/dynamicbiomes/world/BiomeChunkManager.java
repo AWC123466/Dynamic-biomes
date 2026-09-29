@@ -17,6 +17,7 @@ import net.minecraft.server.commands.FillBiomeCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -42,8 +43,8 @@ public final class BiomeChunkManager {
 	/** How many candidate chunks get a full recount+reevaluation per server tick. */
 	private static final int CHUNKS_PER_TICK = 4;
 
-	private static final ChunkBlockCounts COUNTS = new ChunkBlockCounts();
-	private static final Deque<Candidate> QUEUE = new ArrayDeque<>();
+	private static ChunkBlockCounts COUNTS = new ChunkBlockCounts();
+	private static Deque<Candidate> QUEUE = new ArrayDeque<>();
 
 	private BiomeChunkManager() {
 	}
@@ -90,7 +91,7 @@ public final class BiomeChunkManager {
 		ScoreResult bestResult = null;
 		double bestNormalizedScore = -1.0;
 		for (BiomeProfile profile : profiles) {
-			ScoreResult result = scoreFor(pos, profile);
+			ScoreResult result = scoreFor(pos, profile, level);
 			boolean currentlyActive = profile.id().equals(currentActiveId);
 			double threshold = currentlyActive ? profile.exitThreshold() : profile.enterThreshold();
 			if (result.score() < threshold) {
@@ -139,8 +140,8 @@ public final class BiomeChunkManager {
 		}
 
 		// Sphere centered on the weighted position of the actual triggering blocks, not the chunk.
-		int centerY = COUNTS.centerY(pos).orElse(level.getSeaLevel());
-		Holder<Biome> targetHolder = BiomeLookup.resolve(level.registryAccess(), best.targetBiome());
+		int centerY = COUNTS.centerY(pos, level).orElse(level.getSeaLevel());
+		Holder<Biome> targetHolder = BiomeLookup.resolveTarget(level.registryAccess(), best.targetBiome());
 		fillSphere(level, targetHolder, bestResult.centroidX(), centerY, bestResult.centroidZ(), best.radius());
 
 		ChunkBiomeState.AppliedSphere sphere =
@@ -198,7 +199,7 @@ public final class BiomeChunkManager {
 	private record ScoreResult(double score, double centroidX, double centroidZ) {
 	}
 
-	private static ScoreResult scoreFor(ChunkPos center, BiomeProfile profile) {
+	private static ScoreResult scoreFor(ChunkPos center, BiomeProfile profile, Level level) {
 		int radiusChunks = (profile.radius() / 16) + 1;
 		double score = 0;
 		double weightedX = 0;
@@ -210,7 +211,7 @@ public final class BiomeChunkManager {
 					continue;
 				}
 				ChunkPos neighbor = new ChunkPos(center.x() + dx, center.z() + dz);
-				Object2IntMap<Block> counts = COUNTS.get(neighbor);
+				Object2IntMap<Block> counts = COUNTS.get(neighbor, level);
 				if (counts.isEmpty()) {
 					continue;
 				}
@@ -231,6 +232,11 @@ public final class BiomeChunkManager {
 		double centroidX = score > 0 ? weightedX / score : center.getMinBlockX() + 8.0;
 		double centroidZ = score > 0 ? weightedZ / score : center.getMinBlockZ() + 8.0;
 		return new ScoreResult(score, centroidX, centroidZ);
+	}
+
+	public static void recalculate(){
+		COUNTS = new ChunkBlockCounts();
+		QUEUE = new ArrayDeque<>();
 	}
 
 	private record Candidate(ServerLevel level, ChunkPos pos) {

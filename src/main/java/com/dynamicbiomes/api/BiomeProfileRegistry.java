@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Central registry of {@link BiomeProfile}s. Third-party mods depend on this mod and call
+ * Central registry of {@link BiomeProfile}s. Third-party mods depending on this mod should call
  * {@link #register(BiomeProfile)} from their own {@code ModInitializer}, the same way this mod's
  * own built-in profiles (see {@code com.dynamicbiomes.biome}) are registered.
  * <p>

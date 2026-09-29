@@ -5,7 +5,6 @@ import com.dynamicbiomes.api.BiomeProfile;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 
-/** Piling up enough jungle wood/leaves/vines turns the chunk into a real jungle biome. */
 public final class JungleProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("jungle"))
 			.radius(16)
@@ -14,6 +13,7 @@ public final class JungleProfile {
 			.addBlock(Blocks.JUNGLE_LEAVES, 0.75)
 			.addBlock(Blocks.VINE, 1.0)
 			.targetBiome(Biomes.JUNGLE)
+			.priority(1)
 			.build();
 
 	private JungleProfile() {

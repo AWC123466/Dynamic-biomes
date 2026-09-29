@@ -10,6 +10,5 @@ public class DynamicBiomesDatagen implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         // register your providers here, e.g.
         // pack.addProvider(YourModRecipeProvider::new);
-
     }
 }

@@ -5,7 +5,6 @@ import com.dynamicbiomes.api.BiomeProfile;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 
-/** Piling up enough snow/ice turns the chunk into a real snowy plains biome. */
 public final class SnowProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("snow"))
 			.radius(16)
@@ -15,6 +14,7 @@ public final class SnowProfile {
 			.addBlock(Blocks.ICE, 1.5)
 			.addBlock(Blocks.PACKED_ICE, 2)
 			.targetBiome(Biomes.SNOWY_PLAINS)
+			.priority(1)
 			.build();
 
 	private SnowProfile() {

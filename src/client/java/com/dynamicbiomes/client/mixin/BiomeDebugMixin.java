@@ -15,12 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 /**
- * Draws each biome profile's current progress in the bottom-left corner of the screen while F3 is
- * open. Originally this appended to the {@code List<String>} that {@code extractLines} builds, on the
- * assumption the caller draws from that list afterward - but {@code extractLines}'s own local variables
- * are never read again after it returns, meaning it draws its lines inline as it builds them and only
- * uses the list for bookkeeping (background-box sizing). Mutating it at RETURN had no visible effect.
- * Drawing directly via the extractor, independent of vanilla's own text list, sidesteps that entirely.
+ * Draws each biome profile's current progress in the bottom-left corner of the screen while F3 is open.
+ * Drawing directly via the extractor, independent of vanilla's own text list.
  */
 @Mixin(DebugScreenOverlay.class)
 public class BiomeDebugMixin {

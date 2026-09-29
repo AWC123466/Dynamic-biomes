@@ -9,26 +9,20 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Describes a real biome that a chunk should become when enough of its matching blocks are found
- * nearby. Unlike a cosmetic overlay, {@link #targetBiome()} names an actual registered biome (vanilla
- * or modded) that gets assigned to the world via {@code FillBiomeCommand.fill}, so anything reading
- * {@code Level.getBiome(pos)} — other mods' biome-gated content included — sees the real thing.
- * <p>
- * Built via {@link Builder} and registered with {@link BiomeProfileRegistry#register(BiomeProfile)}.
- */
 public final class BiomeProfile {
 	private final Identifier id;
 	private final Map<Block, Double> blockWeights;
 	private final int radius;
 	private final double enterThreshold;
 	private final double exitThreshold;
+	private final int priority;
 	private final ResourceKey<Biome> targetBiome;
 
 	private BiomeProfile(Builder builder) {
 		this.id = builder.id;
 		this.blockWeights = Collections.unmodifiableMap(new LinkedHashMap<>(builder.blockWeights));
 		this.radius = builder.radius;
+		this.priority = builder.priority;
 		this.enterThreshold = builder.enterThreshold;
 		this.exitThreshold = builder.exitThreshold;
 		this.targetBiome = builder.targetBiome;
@@ -45,6 +39,8 @@ public final class BiomeProfile {
 	public int radius() {
 		return radius;
 	}
+
+	public int priority() {return priority;}
 
 	public double enterThreshold() {
 		return enterThreshold;
@@ -65,9 +61,10 @@ public final class BiomeProfile {
 	public static final class Builder {
 		private final Identifier id;
 		private final Map<Block, Double> blockWeights = new LinkedHashMap<>();
-		private int radius = 8;
-		private double enterThreshold = 40.0;
-		private double exitThreshold = 20.0;
+		private int radius;
+		private double enterThreshold;
+		private double exitThreshold;
+		private int priority = 0;
 		private ResourceKey<Biome> targetBiome;
 
 		private Builder(Identifier id) {
@@ -102,6 +99,11 @@ public final class BiomeProfile {
 			return this;
 		}
 
+		public Builder priority(int priority) {
+			this.priority = priority;
+			return this;
+		}
+
 		public BiomeProfile build() {
 			if (blockWeights.isEmpty()) {
 				throw new IllegalStateException("BiomeProfile " + id + " has no matching blocks");
@@ -111,6 +113,9 @@ public final class BiomeProfile {
 			}
 			if (targetBiome == null) {
 				throw new IllegalStateException("BiomeProfile " + id + " has no target biome");
+			}
+			if (priority < 1) {
+				throw new IllegalStateException("BiomeProfile " + id + " has no set priority or priority is set to a negative number");
 			}
 			return new BiomeProfile(this);
 		}
