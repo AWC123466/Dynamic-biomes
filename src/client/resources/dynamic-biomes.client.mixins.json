@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.dynamicbiomes.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"BiomeDebugMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

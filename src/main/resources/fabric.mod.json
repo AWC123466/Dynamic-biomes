@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "dynamic-biomes",
+	"version": "${version}",
+	"name": "Dynamic Biomes",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/dynamic-biomes/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.dynamicbiomes.DynamicBiomes"
+		],
+		"client": [
+			"com.dynamicbiomes.client.DynamicBiomesClient"
+		],
+		"fabric-datagen": [
+			"com.dynamicbiomes.client.datagen.DynamicBiomesDatagen"
+		]
+	},
+	"mixins": [
+		"dynamic-biomes.mixins.json",
+		{
+			"config": "dynamic-biomes.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
