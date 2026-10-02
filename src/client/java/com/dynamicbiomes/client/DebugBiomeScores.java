@@ -30,81 +30,81 @@ public final class DebugBiomeScores {
 	private DebugBiomeScores() {
 	}
 
-	public static List<String> currentLines() {
-		Minecraft minecraft = Minecraft.getInstance();
-		ClientLevel level = minecraft.level;
-		LocalPlayer player = minecraft.player;
-		if (level == null || player == null) {
-			if (!loggedNoLevel) {
-				loggedNoLevel = true;
-				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay has no client level/player yet");
-			}
-			return List.of();
-		}
-		loggedNoLevel = false;
-
-		long now = System.nanoTime();
-		if (now - lastComputeNanos >= RECOMPUTE_INTERVAL_NANOS) {
-			lastComputeNanos = now;
-			try {
-				cachedLines = compute(level, player.blockPosition());
-			} catch (Exception e) {
-				DynamicBiomes.LOGGER.warn("Dynamic Biomes: debug overlay computation failed", e);
-				cachedLines = List.of("Dynamic Biomes: error, see log");
-			}
-			if (now - lastLogNanos >= 5_000_000_000L) {
-				lastLogNanos = now;
-				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay computed {} line(s): {}", cachedLines.size(), cachedLines);
-			}
-		}
-		return cachedLines;
-	}
-
-	private static List<String> compute(ClientLevel level, BlockPos playerPos) {
-		List<BiomeProfile> profiles = BiomeProfileRegistry.getAll();
-		if (profiles.isEmpty()) {
-			return List.of();
-		}
-
-		ChunkPos center = new ChunkPos(playerPos.getX() >> 4, playerPos.getZ() >> 4);
-		List<String> lines = new ArrayList<>();
-		lines.add("Dynamic Biomes:");
-		for (BiomeProfile profile : profiles) {
-			double score = scoreFor(level, center, profile);
-			lines.add(String.format(" %s: %.0f (enter %.0f, exit %.0f)",
-					profile.id().getPath(), score, profile.enterThreshold(), profile.exitThreshold()));
-		}
-		return lines;
-	}
-
-	private static double scoreFor(ClientLevel level, ChunkPos center, BiomeProfile profile) {
-		int radiusChunks = (profile.radius() / 16) + 1;
-		double[] score = {0};
-		for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
-			for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
-				double dist = Math.hypot(dx * 16.0, dz * 16.0);
-				if (dist > profile.radius()) {
-					continue;
-				}
-				int cx = center.x() + dx;
-				int cz = center.z() + dz;
-				if (!level.hasChunk(cx, cz)) {
-					continue;
-				}
-				LevelChunk chunk = (LevelChunk) level.getChunk(cx, cz);
-				for (LevelChunkSection section : chunk.getSections()) {
-					if (section.hasOnlyAir()) {
-						continue;
-					}
-					section.getStates().count((state, count) -> {
-						Double weight = profile.blockWeights().get(state.getBlock());
-						if (weight != null) {
-							score[0] += weight * count;
-						}
-					});
-				}
-			}
-		}
-		return score[0];
-	}
+//	public static List<String> currentLines() {
+//		Minecraft minecraft = Minecraft.getInstance();
+//		ClientLevel level = minecraft.level;
+//		LocalPlayer player = minecraft.player;
+//		if (level == null || player == null) {
+//			if (!loggedNoLevel) {
+//				loggedNoLevel = true;
+//				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay has no client level/player yet");
+//			}
+//			return List.of();
+//		}
+//		loggedNoLevel = false;
+//
+//		long now = System.nanoTime();
+//		if (now - lastComputeNanos >= RECOMPUTE_INTERVAL_NANOS) {
+//			lastComputeNanos = now;
+//			try {
+//				cachedLines = compute(level, player.blockPosition());
+//			} catch (Exception e) {
+//				DynamicBiomes.LOGGER.warn("Dynamic Biomes: debug overlay computation failed", e);
+//				cachedLines = List.of("Dynamic Biomes: error, see log");
+//			}
+//			if (now - lastLogNanos >= 5_000_000_000L) {
+//				lastLogNanos = now;
+//				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay computed {} line(s): {}", cachedLines.size(), cachedLines);
+//			}
+//		}
+//		return cachedLines;
+//	}
+//
+//	private static List<String> compute(ClientLevel level, BlockPos playerPos) {
+//		List<BiomeProfile> profiles = BiomeProfileRegistry.getAll();
+//		if (profiles.isEmpty()) {
+//			return List.of();
+//		}
+//
+//		ChunkPos center = new ChunkPos(playerPos.getX() >> 4, playerPos.getZ() >> 4);
+//		List<String> lines = new ArrayList<>();
+//		lines.add("Dynamic Biomes:");
+//		for (BiomeProfile profile : profiles) {
+//			double score = scoreFor(level, center, profile);
+//			lines.add(String.format(" %s: %.0f threshold %.0f",
+//					profile.id().getPath(), score, profile.enterThreshold()));
+//		}
+//		return lines;
+//	}
+//
+//	private static double scoreFor(ClientLevel level, ChunkPos center, BiomeProfile profile) {
+//		int radiusChunks = (profile.radius() / 16) + 1;
+//		double[] score = {0};
+//		for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
+//			for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
+//				double dist = Math.hypot(dx * 16.0, dz * 16.0);
+//				if (dist > profile.radius()) {
+//					continue;
+//				}
+//				int cx = center.x() + dx;
+//				int cz = center.z() + dz;
+//				if (!level.hasChunk(cx, cz)) {
+//					continue;
+//				}
+//				LevelChunk chunk = (LevelChunk) level.getChunk(cx, cz);
+//				for (LevelChunkSection section : chunk.getSections()) {
+//					if (section.hasOnlyAir()) {
+//						continue;
+//					}
+//					section.getStates().count((state, count) -> {
+//						Double weight = profile.blockWeights().get(state.getBlock());
+//						if (weight != null) {
+//							score[0] += weight * count;
+//						}
+//					});
+//				}
+//			}
+//		}
+//		return score[0];
+//	}
 }

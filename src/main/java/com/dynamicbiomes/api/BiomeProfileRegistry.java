@@ -3,11 +3,7 @@ package com.dynamicbiomes.api;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Central registry of {@link BiomeProfile}s. Third-party mods depending on this mod should call
