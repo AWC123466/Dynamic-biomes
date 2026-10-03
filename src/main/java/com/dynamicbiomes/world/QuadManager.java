@@ -75,25 +75,38 @@ public class QuadManager {
                 count.mergeInt(block,currentQuad.getBlockCount().get(block),Integer::sum);
             }
         }
+        int highestParentPriority = Integer.MIN_VALUE;
         int lowestPriority = Integer.MAX_VALUE;
+
         for (BiomeProfile profile : BiomeProfileRegistry.getAll()) {
             double totalPoints = 0;
             for (Block block : profile.blockWeights().keySet()) {
                 totalPoints += profile.blockWeights().get(block) * count.getOrDefault(block, 0);
             }
             if (totalPoints > profile.enterThreshold()) {
-                if (profile.priority() < lowestPriority) {
-                    lowestPriority = profile.priority();
-                    result = profile.targetBiome();
+                int parentPriority = BiomeProfileRegistry.parentBiomePriority(profile);
+                if (profile.parentBiome() == null) {
+                    if (highestParentPriority < parentPriority) {
+                        highestParentPriority = parentPriority;
+                        lowestPriority = profile.priority();
+                        result = profile.targetBiome();
+                    }
+                }else {
+                    if (highestParentPriority == parentPriority) {
+                        if (lowestPriority > profile.priority()) {
+                            lowestPriority = profile.priority();
+                            result = profile.targetBiome();
+                        }
+                    }
                 }
             }
         }
+
         if (result == null) {
             if (quad.isModified()) {
                 FillBiomeCommand.fill(level, pos, pos.offset(3, 3, 3), BiomeLookup.resolve(level.registryAccess(),quad.getOriginalBiome()));
                 quad.clearOriginal(level);
             }
-
         } else {
             if (!quad.isModified()) {
                 quad.rememberOriginal(level);

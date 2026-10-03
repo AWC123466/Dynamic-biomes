@@ -1,6 +1,8 @@
 package com.dynamicbiomes.api;
 
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
 import java.util.*;
@@ -30,7 +32,9 @@ public final class BiomeProfileRegistry {
 	}
 
 	public static synchronized List<BiomeProfile> getAll() {
-		return List.copyOf(PROFILES.values());
+		List<BiomeProfile> list = new ArrayList<>(List.copyOf(PROFILES.values()));
+		list.sort(Comparator.comparing((BiomeProfile profile) -> profile.parentBiome()!=null));
+		return list;
 	}
 
 	public static synchronized BiomeProfile get(Identifier id) {
@@ -46,6 +50,25 @@ public final class BiomeProfileRegistry {
 			blockIndex = buildIndex();
 		}
 		return blockIndex.getOrDefault(block, List.of());
+	}
+
+	public static synchronized BiomeProfile profileForBiome(ResourceKey<Biome> biome) {
+		for (BiomeProfile profile : PROFILES.values()) {
+			if (profile.targetBiome().equals(biome)) {
+				return profile;
+			}
+		}
+		return null;
+	}
+
+	public static synchronized int parentBiomePriority(BiomeProfile profile) {
+		if  (profile.parentBiome() == null) {
+			return profile.parentBiomePriority();
+		}else  if (profile.secondaryParent() == null) {
+			return profileForBiome(profile.parentBiome()).parentBiomePriority();
+		}else {
+			return Math.max(profileForBiome(profile.parentBiome()).parentBiomePriority(),profileForBiome(profile.secondaryParent()).parentBiomePriority());
+		}
 	}
 
 	private static Map<Block, List<BiomeProfile>> buildIndex() {

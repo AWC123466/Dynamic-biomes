@@ -2,6 +2,7 @@ package com.dynamicbiomes.biome;
 
 import com.dynamicbiomes.BiomeType;
 import com.dynamicbiomes.DynamicBiomes;
+import com.dynamicbiomes.ParentBiomeType;
 import com.dynamicbiomes.api.BiomeProfile;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
@@ -15,6 +16,7 @@ public final class SnowProfile {
 			.addBlock(Blocks.PACKED_ICE, 2)
 			.targetBiome(Biomes.SNOWY_PLAINS)
 			.biomeType(null,null, BiomeType.PARENT)
+			.parentBiomeType(ParentBiomeType.GENERIC)
 			.build();
 
 	private SnowProfile() {

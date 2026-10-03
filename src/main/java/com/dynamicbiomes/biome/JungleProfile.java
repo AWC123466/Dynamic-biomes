@@ -2,6 +2,7 @@ package com.dynamicbiomes.biome;
 
 import com.dynamicbiomes.BiomeType;
 import com.dynamicbiomes.DynamicBiomes;
+import com.dynamicbiomes.ParentBiomeType;
 import com.dynamicbiomes.api.BiomeProfile;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
@@ -14,6 +15,7 @@ public final class JungleProfile {
 			.addBlock(Blocks.VINE, 1.0)
 			.targetBiome(Biomes.JUNGLE)
 			.biomeType(null,null, BiomeType.PARENT)
+			.parentBiomeType(ParentBiomeType.SPECIAL)
 			.build();
 
 	private JungleProfile() {
