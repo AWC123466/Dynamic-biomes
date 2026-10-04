@@ -13,9 +13,9 @@ import java.nio.file.Path;
 
 public class ModConfig {
     public boolean DefaultProfilesOn = true;
-    public boolean perPlayerBiomeUpdatingOn = false;
+    public boolean PerPlayerBiomeUpdatingOn = false;
     public int QuadsPerTick = 4;
-    public int radius = 4;
+    public int Radius = 4;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("dynamic-biomes.json");
     public static ModConfig INSTANCE = new ModConfig();

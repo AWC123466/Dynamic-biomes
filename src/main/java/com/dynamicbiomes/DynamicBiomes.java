@@ -25,7 +25,6 @@ public class DynamicBiomes implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModConfig.load();
 		ModAttachments.init();
 		if (ModConfig.INSTANCE.DefaultProfilesOn) {
 			BiomeProfileRegistry.register(DesertProfile.PROFILE);
@@ -38,7 +37,9 @@ public class DynamicBiomes implements ModInitializer {
 
 
 		LOGGER.info("Dynamic Biomes: registered {} biome profiles", BiomeProfileRegistry.getAll().size());
-
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((s,RM,b) -> {
+			ModConfig.load();
+		});
 		ServerLifecycleEvents.SERVER_STARTED.register(s -> server = s);
 		ServerLifecycleEvents.SERVER_STOPPED.register(s -> server = null);
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {

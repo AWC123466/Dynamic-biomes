@@ -23,10 +23,6 @@ import java.util.*;
 public class QuadManager {
     private static Deque<Candidate> QUEUE = new ArrayDeque<>();
 
-//    private static final int CHUNK_SCANNING_RADIUS =ModConfig.INSTANCE.scanRadius;
-    private static final int BIOME_CHECK_RADIUS = ModConfig.INSTANCE.radius;
-    private static final int QUADS_PER_TICK = ModConfig.INSTANCE.QuadsPerTick;
-
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(QuadManager::onEndTick);
     }
@@ -38,20 +34,20 @@ public class QuadManager {
             for (ServerLevel level : server.getAllLevels()) {
                 for (ServerPlayer player : PlayerLookup.level(level)) {
                     BlockPos centerQuad = new BlockPos((player.blockPosition().getX()>>2)<<2,(player.blockPosition().getY()>>2)<<2,(player.blockPosition().getZ()>>2)<<2);
-                    for (BlockPos neighborPos : Quad.getNeighbours(BIOME_CHECK_RADIUS, centerQuad)) {
+                    for (BlockPos neighborPos : Quad.getNeighbours(ModConfig.INSTANCE.Radius, centerQuad)) {
                         candidates.add(new Candidate(neighborPos, level));
                     }
                 }
             }
             QUEUE.addAll(candidates);
         }
-        if (ModConfig.INSTANCE.perPlayerBiomeUpdatingOn) {
-            for (int i = 0; i < QUADS_PER_TICK *playerCount && !QUEUE.isEmpty(); i++) {
+        if (ModConfig.INSTANCE.PerPlayerBiomeUpdatingOn) {
+            for (int i = 0; i < ModConfig.INSTANCE.QuadsPerTick *playerCount && !QUEUE.isEmpty(); i++) {
                 Candidate candidate = QUEUE.poll();
                 quadBiomeSelector(candidate.centerQuad,candidate.level);
             }
         }else {
-            for (int i = 0; i < QUADS_PER_TICK && !QUEUE.isEmpty(); i++) {
+            for (int i = 0; i < ModConfig.INSTANCE.QuadsPerTick && !QUEUE.isEmpty(); i++) {
                 Candidate candidate = QUEUE.poll();
                 quadBiomeSelector(candidate.centerQuad,candidate.level);
             }
