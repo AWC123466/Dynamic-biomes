@@ -1,27 +1,32 @@
 # Dynamic Biomes
 ***
+
 ## _Did you ever want to..._
 
-* grow a pale garden around your house?
-* have a mushroom island right next to your base?
-* turn a mountain into an ocean?
-* terraform hell into your second overworld?
-* have complete freedom in how your world is shaped?
+* Grow a pale garden around your house?
+* Have a mushroom island right next to your base?
+* Turn a mountain into an ocean?
+* Terraform hell into your second overworld?
+* Have complete freedom in how your world is shaped?
 
-## **Dynamic Biomes** allows to
+## **Dynamic Biomes** allows you to...
 
-**move** your biomes wherever you want, even to another dimension
+**CREATE** biomes in survival mode
+
+**MOVE** your biomes wherever you want, even to another dimension
+
+**DESTROY** forests and oceans, as if they weren't there
 
 ## How it works
 
-The world is split into quads (4x4x4 cubes). The mod counts the blocks in each quad, and the counts change as blocks are placed or broken. Each biome profile gives certain blocks a weight. When a quad's score for a profile passes that profile's threshold, the mod assigns the matching real `Biome` to the quad. This is the same biome data `/fillbiome` writes, so grass and foliage colour, weather, mob spawns and sky all follow the new biome.
+The world is split into quads (4x4x4 cubes). The mod counts the blocks in each quad, and the counts change as blocks are placed or broken. Each biome profile gives certain blocks a weight. When a quad's score for a profile passes that profile's threshold, the mod assigns the matching Biome to the quad. This is the same biome data `/fillbiome` writes, so grass and foliage colour, weather, mob spawns and sky all follow the new biome.
 
 Profiles come in types, and a profile's type sets its priority when several match:
-
+~~~
 * **Parent** – base biomes such as snow, ocean, swamp, jungle and badlands.
 * **Mixed** – a blend of two parents, e.g. frozen ocean.
 * **Beach, River, Forest, Underground, Special** – child biomes that only apply if their parent biome(s) apply.
-
+~~~
 Each profile can also be limited to specific dimensions.
 
 ## Requirements

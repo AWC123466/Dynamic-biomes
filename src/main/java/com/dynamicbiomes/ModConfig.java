@@ -17,7 +17,7 @@ public class ModConfig {
     public boolean PerPlayerBiomeUpdatingOn = false;
     public int QuadsPerTick = 10;
     public int Radius = 4;
-    public boolean DebugMenuOn = true;
+    public boolean DebugMenuOn = false;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("dynamic-biomes.json");
     public static ModConfig INSTANCE = new ModConfig();
