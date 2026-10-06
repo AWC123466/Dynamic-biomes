@@ -1,4 +1,5 @@
 # Dynamic Biomes
+
 ***
 
 ## _Did you ever want to..._
@@ -15,18 +16,20 @@
 
 **MOVE** your biomes wherever you want, even to another dimension
 
-**DESTROY** forests and oceans, as if they weren't there
+**DESTROY** forests and oceans, as if they weren't there in the first place
 
 ## How it works
 
 The world is split into quads (4x4x4 cubes). The mod counts the blocks in each quad, and the counts change as blocks are placed or broken. Each biome profile gives certain blocks a weight. When a quad's score for a profile passes that profile's threshold, the mod assigns the matching Biome to the quad. This is the same biome data `/fillbiome` writes, so grass and foliage colour, weather, mob spawns and sky all follow the new biome.
 
+***
+
 Profiles come in types, and a profile's type sets its priority when several match:
-~~~
+
 * **Parent** – base biomes such as snow, ocean, swamp, jungle and badlands.
 * **Mixed** – a blend of two parents, e.g. frozen ocean.
 * **Beach, River, Forest, Underground, Special** – child biomes that only apply if their parent biome(s) apply.
-~~~
+
 Each profile can also be limited to specific dimensions.
 
 ## Requirements
@@ -55,7 +58,7 @@ Profiles are built through `BiomeProfile.builder(id)`:
 
 ```java
 BiomeProfile.builder(DynamicBiomes.id("my_biome"))// id of the profile. two profiles with the same id cant exist
-    .addBlocks(<WEIGTH>, Blocks.<BLOCK>, Blocks.<BLOCK>)// (points for each block, block, block...)
+    .addBlocks(<WEIGHT>, Blocks.<BLOCK>, Blocks.<BLOCK>)// (points for each block, block, block...)
     .threshold(<THRESHOLD>)// point threshold to apply the biome
     .targetBiome(Biomes.<BIOME>) // biome applied by the profile
     .biomeType(null, null, BiomeType.<TYPE>)// (parent biome resourceKey(if null, the profile is considered a parent), secondary biome ResourceKey (only used for mixed biomes), biome type)

@@ -23,6 +23,7 @@ public final class BiomeProfile {
 	private final ResourceKey<Biome> secondaryParent;
 	private final int parentBiomePriority;
 	private final Set<ResourceKey<Level>> levels;
+	private final boolean allLevels;
 
 	private BiomeProfile(Builder builder) {
 		this.id = builder.id;
@@ -34,6 +35,7 @@ public final class BiomeProfile {
         this.secondaryParent = builder.secondaryParent;
         this.parentBiomePriority = builder.parentBiomePriority;
 		this.levels = builder.levels;
+		this.allLevels = builder.allLevels;
     }
 
 	public Identifier id() {
@@ -53,6 +55,8 @@ public final class BiomeProfile {
 	public int parentBiomePriority() {return parentBiomePriority;}
 
 	public Set<ResourceKey<Level>> levels() {return levels;}
+
+	public boolean isAllLevels(){ return allLevels;}
 
 	public double enterThreshold() {
 		return enterThreshold;
@@ -76,6 +80,7 @@ public final class BiomeProfile {
 		private ResourceKey<Biome> secondaryParent;
 		private int parentBiomePriority = -1;
 		private Set<ResourceKey<Level>> levels = new HashSet<>();
+		private boolean allLevels = false;
 
 		private Builder(Identifier id) {
 			this.id = id;
@@ -113,7 +118,7 @@ public final class BiomeProfile {
 		 *  a more user-friendly priority system for biomes.
 		 *  Mixed biomes are a mix of two parent biomes
 		 *  e.g. frozen ocean is a mix of snow biome and ocean biome.
-		 *  Any biome type other than parent can only apply if its parent or parents can apply`
+		 *  Any biome type other than parent can only apply if its parent or parents can apply
 		 *  mandatory for any biome
 		 *  */
 		public Builder biomeType(@Nullable ResourceKey<Biome> parentBiome,@Nullable ResourceKey<Biome> secondaryParent, BiomeType biomeType) {
@@ -148,7 +153,7 @@ public final class BiomeProfile {
 		@SafeVarargs
         public final Builder applicableDimensions(ResourceKey<Level>... levels) {
 			if (levels.length == 0) {
-				this.levels = DynamicBiomes.getServer().levelKeys();
+				allLevels = true;
 			}else {
 				this.levels = Set.of(levels);
 			}
@@ -161,7 +166,7 @@ public final class BiomeProfile {
 			if (blockWeights.isEmpty() && enterThreshold>=0) throw new IllegalStateException("BiomeProfile " + id + " has no matching blocks, but has a positive (or zero) threshold");
 			if (targetBiome == null) throw new IllegalStateException("BiomeProfile " + id + " has no target biome");
 			if (priority < 1) throw new IllegalStateException("BiomeProfile " + id + " biome type is set incorrectly");
-			if (levels.isEmpty()) throw new IllegalStateException(".applicableDimensions was not called for BiomeProfile " + id);
+			if (levels.isEmpty() && !allLevels) throw new IllegalStateException(".applicableDimensions was not called for BiomeProfile " + id);
 			if (parentBiome != null && parentBiomePriority<0) throw new IllegalStateException("Parent biome "+ id+ " doesnt have a set type");
 			return new BiomeProfile(this );
 		}

@@ -75,6 +75,7 @@ public class QuadManager {
         int lowestPriority = Integer.MAX_VALUE;
         Set<BiomeProfile> activeProfiles = new HashSet<>();
         for (BiomeProfile profile : BiomeProfileRegistry.getAll()) {
+            if (!profile.levels().contains(level.dimension()) && !profile.isAllLevels()) continue;
             double totalPoints = 0;
             for (Block block : profile.blockWeights().keySet()) {
                 totalPoints += profile.blockWeights().get(block) * count.getOrDefault(block, 0);

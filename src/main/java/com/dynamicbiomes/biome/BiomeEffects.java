@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.world.level.biome.Biomes;
 
-/** Overrides grass color in every vanilla nether biome. */
+/** Overrides grass color in nether wastes, crimson forest, warped forest and soul sand valley. */
 public final class BiomeEffects {
 	private static final int RED_GRASS_COLOR = 0x821f1f;
 	private static final int BLUE_GRASS_COLOR = 0x2b7265;

@@ -63,6 +63,7 @@ public final class DebugBiomeScores {
 					if (blockCount.get(block) == null) continue;
 					totalPoints += (profile.blockWeights().get(block)*blockCount.get(block));
 				}
+				if (totalPoints== 0)continue;
 				cachedLines.add(profile.id() + ":[threshold:"+profile.enterThreshold()+" /// points:"+ totalPoints+" ]");
 			}
 		}

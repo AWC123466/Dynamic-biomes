@@ -12,8 +12,9 @@ import java.util.*;
  * {@link #register(BiomeProfile)} from their own {@code ModInitializer}, the same way this mod's
  * own built-in profiles (see {@code com.dynamicbiomes.biome}) are registered.
  * <p>
- * Registration should happen during mod init. The block-to-profile lookup index is built lazily on
- * first read and cached, so registering after the scanner has already started reading is unsafe.
+ * Registration should happen during mod init. The block-to-profile lookup index is rebuilt after
+ * every registration, but quads that already counted their blocks do not recount, so a profile
+ * registered later will not see blocks that were untracked when those quads were counted.
  */
 public final class BiomeProfileRegistry {
 	private static final Map<Identifier, BiomeProfile> PROFILES = new LinkedHashMap<>();
@@ -42,8 +43,8 @@ public final class BiomeProfileRegistry {
 	}
 
 	/**
-	 * Profiles that care about the given block, in registration order. Used by the scanner to score
-	 * every candidate profile in a single pass over sampled blocks.
+	 * Profiles that care about the given block, in registration order. Quads use this to decide
+	 * which blocks are worth counting.
 	 */
 	public static synchronized List<BiomeProfile> profilesForBlock(Block block) {
 		if (blockIndex == null) {
