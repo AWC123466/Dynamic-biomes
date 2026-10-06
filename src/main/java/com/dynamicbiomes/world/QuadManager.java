@@ -63,7 +63,7 @@ public class QuadManager {
         if (quad == null) return;
         ResourceKey<Biome> result = null;
         Object2IntMap<Block> count = new Object2IntOpenHashMap<>();
-        List<BlockPos> neighbors = Quad.getNeighbours(3, pos);
+        Set<BlockPos> neighbors = Quad.getNeighbours(ModConfig.INSTANCE.Radius, pos);
         for (BlockPos key : neighbors) {
             Quad currentQuad = Quad.getOrCreate(level,key);
             if (currentQuad == null) return;
@@ -73,7 +73,7 @@ public class QuadManager {
         }
         int highestParentPriority = Integer.MIN_VALUE;
         int lowestPriority = Integer.MAX_VALUE;
-
+        Set<BiomeProfile> activeProfiles = new HashSet<>();
         for (BiomeProfile profile : BiomeProfileRegistry.getAll()) {
             double totalPoints = 0;
             for (Block block : profile.blockWeights().keySet()) {
@@ -87,12 +87,11 @@ public class QuadManager {
                         lowestPriority = profile.priority();
                         result = profile.targetBiome();
                     }
-                }else {
-                    if (highestParentPriority == parentPriority) {
-                        if (lowestPriority > profile.priority()) {
+                    activeProfiles.add(profile);
+                } else if (activeProfiles.contains(BiomeProfileRegistry.profileForBiome(profile.parentBiome())) && activeProfiles.contains(BiomeProfileRegistry.profileForBiome(profile.secondaryParent()))){
+                    if (lowestPriority > profile.priority()) {
                             lowestPriority = profile.priority();
                             result = profile.targetBiome();
-                        }
                     }
                 }
             }

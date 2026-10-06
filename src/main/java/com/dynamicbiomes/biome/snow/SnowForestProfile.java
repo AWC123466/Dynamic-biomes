@@ -1,4 +1,4 @@
-package com.dynamicbiomes.biome;
+package com.dynamicbiomes.biome.snow;
 
 import com.dynamicbiomes.BiomeType;
 import com.dynamicbiomes.DynamicBiomes;
@@ -8,7 +8,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 
 public class SnowForestProfile {
-    public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("snowforest"))
+    public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("snow_forest"))
             .threshold(200)
             .addBlock(Blocks.SPRUCE_LEAVES, 1)
             .targetBiome(Biomes.SNOWY_TAIGA)

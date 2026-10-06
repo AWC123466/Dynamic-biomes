@@ -10,13 +10,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Quad {
     public static final Codec<Quad> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -60,9 +63,9 @@ public class Quad {
         return quad;
     }
 
-    public static List<BlockPos> getNeighbours(int radius, BlockPos pos) {
+    public static Set<BlockPos> getNeighbours(int radius, BlockPos pos) {
         BlockPos center = origin(pos);
-        List<BlockPos> keys = new ArrayList<>();
+        Set<BlockPos> keys = new HashSet<>();
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -130,6 +133,22 @@ public class Quad {
                 }
             }
         }
+    }
+
+    public static Object2IntMap<Block> recalculateBlockCount(Level level, BlockPos pos) {
+        Object2IntMap<Block> blockCount = new Object2IntOpenHashMap<>();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int z = 0; z < 4; z++) {
+                    Block block = level.getBlockState(cursor.setWithOffset(pos, x, y, z)).getBlock();
+                    if (isTracked(block)) {
+                        blockCount.mergeInt(block, 1, Integer::sum);
+                    }
+                }
+            }
+        }
+        return blockCount;
     }
 
     private static boolean isTracked(Block block) {

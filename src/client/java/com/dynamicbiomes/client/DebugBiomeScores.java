@@ -1,18 +1,23 @@
 package com.dynamicbiomes.client;
 
+
 import com.dynamicbiomes.DynamicBiomes;
+import com.dynamicbiomes.ModConfig;
 import com.dynamicbiomes.api.BiomeProfile;
+
 import com.dynamicbiomes.api.BiomeProfileRegistry;
+import com.dynamicbiomes.world.Quad;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Computes each registered {@link BiomeProfile}'s current score around the local player, purely from
@@ -20,91 +25,47 @@ import java.util.List;
  * already visible to the client. Used to add live progress lines to the F3 debug screen.
  */
 public final class DebugBiomeScores {
-	private static final long RECOMPUTE_INTERVAL_NANOS = 500_000_000L;
-
-	private static List<String> cachedLines = List.of();
+	private static final long RECOMPUTE_INTERVAL_NANOS = 1_000_000_000;
+	private static List<String> cachedLines = new ArrayList<>();
 	private static long lastComputeNanos = 0;
-	private static long lastLogNanos = 0;
-	private static boolean loggedNoLevel = false;
 
-	private DebugBiomeScores() {
+	static Object2IntMap<Block> getBlockCounts(ClientLevel level, LocalPlayer player) {
+		if (player != null) {
+			Object2IntMap<Block> blockCount = new Object2IntOpenHashMap<>();
+			BlockPos origin = Quad.origin(player.blockPosition());
+			for (BlockPos pos : Quad.getNeighbours(ModConfig.INSTANCE.Radius, origin)) {
+				Object2IntMap<Block> part = Quad.recalculateBlockCount(level, pos);
+				part.forEach((key, value) -> blockCount.merge(key, value, Integer::sum));
+			}
+			return blockCount;
+		}
+		return null;
 	}
 
-//	public static List<String> currentLines() {
-//		Minecraft minecraft = Minecraft.getInstance();
-//		ClientLevel level = minecraft.level;
-//		LocalPlayer player = minecraft.player;
-//		if (level == null || player == null) {
-//			if (!loggedNoLevel) {
-//				loggedNoLevel = true;
-//				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay has no client level/player yet");
-//			}
-//			return List.of();
-//		}
-//		loggedNoLevel = false;
-//
-//		long now = System.nanoTime();
-//		if (now - lastComputeNanos >= RECOMPUTE_INTERVAL_NANOS) {
-//			lastComputeNanos = now;
-//			try {
-//				cachedLines = compute(level, player.blockPosition());
-//			} catch (Exception e) {
-//				DynamicBiomes.LOGGER.warn("Dynamic Biomes: debug overlay computation failed", e);
-//				cachedLines = List.of("Dynamic Biomes: error, see log");
-//			}
-//			if (now - lastLogNanos >= 5_000_000_000L) {
-//				lastLogNanos = now;
-//				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay computed {} line(s): {}", cachedLines.size(), cachedLines);
-//			}
-//		}
-//		return cachedLines;
-//	}
-//
-//	private static List<String> compute(ClientLevel level, BlockPos playerPos) {
-//		List<BiomeProfile> profiles = BiomeProfileRegistry.getAll();
-//		if (profiles.isEmpty()) {
-//			return List.of();
-//		}
-//
-//		ChunkPos center = new ChunkPos(playerPos.getX() >> 4, playerPos.getZ() >> 4);
-//		List<String> lines = new ArrayList<>();
-//		lines.add("Dynamic Biomes:");
-//		for (BiomeProfile profile : profiles) {
-//			double score = scoreFor(level, center, profile);
-//			lines.add(String.format(" %s: %.0f threshold %.0f",
-//					profile.id().getPath(), score, profile.enterThreshold()));
-//		}
-//		return lines;
-//	}
-//
-//	private static double scoreFor(ClientLevel level, ChunkPos center, BiomeProfile profile) {
-//		int radiusChunks = (profile.radius() / 16) + 1;
-//		double[] score = {0};
-//		for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
-//			for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
-//				double dist = Math.hypot(dx * 16.0, dz * 16.0);
-//				if (dist > profile.radius()) {
-//					continue;
-//				}
-//				int cx = center.x() + dx;
-//				int cz = center.z() + dz;
-//				if (!level.hasChunk(cx, cz)) {
-//					continue;
-//				}
-//				LevelChunk chunk = (LevelChunk) level.getChunk(cx, cz);
-//				for (LevelChunkSection section : chunk.getSections()) {
-//					if (section.hasOnlyAir()) {
-//						continue;
-//					}
-//					section.getStates().count((state, count) -> {
-//						Double weight = profile.blockWeights().get(state.getBlock());
-//						if (weight != null) {
-//							score[0] += weight * count;
-//						}
-//					});
-//				}
-//			}
-//		}
-//		return score[0];
-//	}
+	public static List<String> currentLines() {
+		Minecraft minecraft = Minecraft.getInstance();
+		ClientLevel level = minecraft.level;
+		LocalPlayer player = minecraft.player;
+		long now = System.nanoTime();
+		Object2IntMap<Block> blockCount = getBlockCounts(level, player);
+		if (now - lastComputeNanos >= RECOMPUTE_INTERVAL_NANOS) {
+			if (level == null || player == null) {
+				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay has no client level/player yet");
+				return List.of();
+			}
+
+			lastComputeNanos = now;
+			cachedLines.clear();
+			cachedLines.add("Dynamic biomes:");
+			for (BiomeProfile profile: BiomeProfileRegistry.getAll()){
+				double totalPoints = 0;
+				for (Block block:profile.blockWeights().keySet()){
+					if (blockCount.get(block) == null) continue;
+					totalPoints += (profile.blockWeights().get(block)*blockCount.get(block));
+				}
+				cachedLines.add(profile.id() + ":[threshold:"+profile.enterThreshold()+" /// points:"+ totalPoints+" ]");
+			}
+		}
+		return cachedLines;
+	}
 }

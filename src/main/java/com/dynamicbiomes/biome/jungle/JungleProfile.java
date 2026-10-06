@@ -1,4 +1,4 @@
-package com.dynamicbiomes.biome;
+package com.dynamicbiomes.biome.jungle;
 
 import com.dynamicbiomes.BiomeType;
 import com.dynamicbiomes.DynamicBiomes;

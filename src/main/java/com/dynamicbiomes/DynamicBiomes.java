@@ -1,10 +1,22 @@
 package com.dynamicbiomes;
 
 import com.dynamicbiomes.api.BiomeProfileRegistry;
-import com.dynamicbiomes.biome.DesertProfile;
-import com.dynamicbiomes.biome.JungleProfile;
-import com.dynamicbiomes.biome.SnowForestProfile;
-import com.dynamicbiomes.biome.SnowProfile;
+import com.dynamicbiomes.biome.*;
+import com.dynamicbiomes.biome.jungle.BambooJungleProfile;
+import com.dynamicbiomes.biome.jungle.JungleProfile;
+import com.dynamicbiomes.biome.nether.BasaltDeltasProfile;
+import com.dynamicbiomes.biome.nether.CrimsonForestProfile;
+import com.dynamicbiomes.biome.BiomeEffects;
+import com.dynamicbiomes.biome.nether.NetherWastesProfile;
+import com.dynamicbiomes.biome.nether.SoulSandValleyProfile;
+import com.dynamicbiomes.biome.nether.WarpedForestProfile;
+import com.dynamicbiomes.biome.ocean.FrozenOceanProfile;
+import com.dynamicbiomes.biome.ocean.OceanProfile;
+import com.dynamicbiomes.biome.snow.SnowBeachProfile;
+import com.dynamicbiomes.biome.snow.SnowForestProfile;
+import com.dynamicbiomes.biome.snow.SnowProfile;
+import com.dynamicbiomes.biome.swamp.MangroveSwampProfile;
+import com.dynamicbiomes.biome.swamp.SwampProfile;
 import com.dynamicbiomes.world.ModAttachments;
 import com.dynamicbiomes.world.QuadManager;
 import net.fabricmc.api.ModInitializer;
@@ -28,11 +40,29 @@ public class DynamicBiomes implements ModInitializer {
 		ModAttachments.init();
 		if (ModConfig.INSTANCE.DefaultProfilesOn) {
 			BiomeProfileRegistry.register(DesertProfile.PROFILE);
+			BiomeProfileRegistry.register(BadlandsProfile.PROFILE);
 			BiomeProfileRegistry.register(SnowProfile.PROFILE);
-			BiomeProfileRegistry.register(JungleProfile.PROFILE);
 			BiomeProfileRegistry.register(SnowForestProfile.PROFILE);
+			BiomeProfileRegistry.register(SnowBeachProfile.PROFILE);
+			BiomeProfileRegistry.register(JungleProfile.PROFILE);
+			BiomeProfileRegistry.register(BambooJungleProfile.PROFILE);
+			BiomeProfileRegistry.register(SwampProfile.PROFILE);
+			BiomeProfileRegistry.register(MangroveSwampProfile.PROFILE);
+			BiomeProfileRegistry.register(OceanProfile.PROFILE);
+			BiomeProfileRegistry.register(FrozenOceanProfile.PROFILE);
+			BiomeProfileRegistry.register(MushroomFieldsProfile.PROFILE);
+			BiomeProfileRegistry.register(CherryGroveProfile.PROFILE);
+			BiomeProfileRegistry.register(DeepDarkProfile.PROFILE);
+			BiomeProfileRegistry.register(CrimsonForestProfile.PROFILE);
+			BiomeProfileRegistry.register(WarpedForestProfile.PROFILE);
+			BiomeProfileRegistry.register(SoulSandValleyProfile.PROFILE);
+			BiomeProfileRegistry.register(BasaltDeltasProfile.PROFILE);
+			BiomeProfileRegistry.register(NetherWastesProfile.PROFILE);
+			BiomeProfileRegistry.register(PaleGardenProfile.PROFILE);
+			BiomeEffects.register();
 		}
 
+		ModConfig.load();
 		QuadManager.register();
 
 

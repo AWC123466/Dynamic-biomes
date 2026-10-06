@@ -1,4 +1,4 @@
-package com.dynamicbiomes.biome;
+package com.dynamicbiomes.biome.snow;
 
 import com.dynamicbiomes.BiomeType;
 import com.dynamicbiomes.DynamicBiomes;
