@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.Blocks;
 
 public class BadlandsProfile {
     public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("badlands"))
-            .threshold(600.0)
-            .addBlock(Blocks.RED_SAND, 1.0)
-            .addBlock(Blocks.RED_SANDSTONE, 2.0)
+            .threshold(600)
+            .addBlock(Blocks.RED_SAND, 1)
+            .addBlock(Blocks.RED_SANDSTONE, 2)
             .targetBiome(Biomes.BADLANDS)
             .biomeType(null,null, BiomeType.PARENT)
             .parentBiomeType(ParentBiomeType.PLAIN)

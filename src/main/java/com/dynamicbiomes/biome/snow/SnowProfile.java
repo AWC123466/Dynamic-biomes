@@ -10,11 +10,10 @@ import net.minecraft.world.level.block.Blocks;
 
 public final class SnowProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("snow"))
-			.threshold(300.0)
-			.addBlock(Blocks.SNOW_BLOCK, 1.0)
-			.addBlock(Blocks.POWDER_SNOW, 1.0)
+			.threshold(400)
+			.addBlock(Blocks.SNOW_BLOCK, 1)
+			.addBlock(Blocks.POWDER_SNOW, 2)
 			.addBlock(Blocks.ICE, 1.5)
-			.addBlock(Blocks.PACKED_ICE, 2)
 			.targetBiome(Biomes.SNOWY_PLAINS)
 			.biomeType(null,null, BiomeType.PARENT)
 			.parentBiomeType(ParentBiomeType.GENERIC)

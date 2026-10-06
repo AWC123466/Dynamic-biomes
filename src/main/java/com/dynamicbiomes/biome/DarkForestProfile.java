@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 
 public class DarkForestProfile {
     public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("dark_forest"))
-            .threshold(300.0)
+            .threshold(300)
             .addBlock(Blocks.DARK_OAK_LEAVES, 0.5)
             .addBlock(Blocks.DARK_OAK_LOG, 1)
             .targetBiome(Biomes.DARK_FOREST)

@@ -13,7 +13,6 @@ public final class SoulSandValleyProfile {
 			.threshold(300)
 			.addBlock(Blocks.SOUL_SAND, 1)
 			.addBlock(Blocks.SOUL_SOIL, 1)
-			.addBlock(Blocks.BONE_BLOCK, 1.5)
 			.targetBiome(Biomes.SOUL_SAND_VALLEY)
 			.biomeType(null, null, BiomeType.PARENT)
 			.parentBiomeType(ParentBiomeType.SPECIAL)

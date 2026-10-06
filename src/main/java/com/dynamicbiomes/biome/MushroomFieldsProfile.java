@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.Blocks;
 
 public final class MushroomFieldsProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("mushroom_fields"))
-			.threshold(400.0)
-			.addBlock(Blocks.MYCELIUM, 1.0)
+			.threshold(400)
+			.addBlock(Blocks.MYCELIUM, 1)
 			.addBlock(Blocks.RED_MUSHROOM_BLOCK, 1.5)
 			.addBlock(Blocks.BROWN_MUSHROOM_BLOCK, 1.5)
 			.targetBiome(Biomes.MUSHROOM_FIELDS)

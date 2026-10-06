@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.Blocks;
 
 public final class CherryGroveProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("cherry_grove"))
-			.threshold(400.0)
-			.addBlock(Blocks.CHERRY_LOG, 1.0)
+			.threshold(300)
+			.addBlock(Blocks.CHERRY_LOG, 1)
 			.addBlock(Blocks.CHERRY_LEAVES, 0.75)
-			.addBlock(Blocks.PINK_PETALS, 1.0)
+			.addBlock(Blocks.PINK_PETALS, 1)
 			.targetBiome(Biomes.CHERRY_GROVE)
 			.biomeType(null, null, BiomeType.PARENT)
 			.parentBiomeType(ParentBiomeType.SPECIAL)

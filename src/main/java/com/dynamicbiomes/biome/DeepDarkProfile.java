@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.Blocks;
 
 public final class DeepDarkProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("deep_dark"))
-			.threshold(300.0)
-			.addBlock(Blocks.SCULK, 1.0)
+			.threshold(150)
+			.addBlock(Blocks.SCULK, 1)
 			.addBlock(Blocks.SCULK_VEIN, 0.5)
-			.addBlock(Blocks.SCULK_CATALYST, 2.0)
+			.addBlock(Blocks.SCULK_CATALYST, 2)
 			.targetBiome(Biomes.DEEP_DARK)
 			.biomeType(null, null, BiomeType.PARENT)
 			.parentBiomeType(ParentBiomeType.SPECIAL)

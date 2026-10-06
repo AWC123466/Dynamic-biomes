@@ -3,16 +3,15 @@
 	"id": "dynamic-biomes",
 	"version": "${version}",
 	"name": "Dynamic Biomes",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Mod/library that allows biomes to appear depending on surrounding blocks. Default profiles can be disabled in order to use it as a dependency and add your own biome profiles.",
 	"authors": [
-		"Me!"
+		"AWC"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"github": "https://github.com/AWC123466/Dynamic-biomes"
 	},
 	"license": "LGPL-3.0-only",
-	"icon": "assets/dynamic-biomes/icon.png",
+	"icon": "assets/dynamic-biomes/shedevr.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [

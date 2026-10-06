@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 
 public final class OceanProfile {
 	public static final BiomeProfile PROFILE = BiomeProfile.builder(DynamicBiomes.id("ocean"))
-			.threshold(18000)
+			.threshold(16000)
 			.addBlock(Blocks.WATER, 1)
 			.addBlock(Blocks.KELP, 1)
 			.targetBiome(Biomes.OCEAN)
