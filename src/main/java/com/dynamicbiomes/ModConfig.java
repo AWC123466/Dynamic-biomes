@@ -13,6 +13,7 @@ import java.nio.file.Path;
 
 public class ModConfig {
     public boolean DefaultProfilesOn = true;
+    public boolean NetherGrassRecolor = true;
     public boolean PerPlayerBiomeUpdatingOn = false;
     public int QuadsPerTick = 10;
     public int Radius = 4;

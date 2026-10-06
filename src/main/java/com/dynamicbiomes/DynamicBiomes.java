@@ -38,6 +38,8 @@ public class DynamicBiomes implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModAttachments.init();
+		ModConfig.load();
+
 		if (ModConfig.INSTANCE.DefaultProfilesOn) {
 			BiomeProfileRegistry.register(DesertProfile.PROFILE);
 			BiomeProfileRegistry.register(BadlandsProfile.PROFILE);
@@ -59,10 +61,13 @@ public class DynamicBiomes implements ModInitializer {
 			BiomeProfileRegistry.register(BasaltDeltasProfile.PROFILE);
 			BiomeProfileRegistry.register(NetherWastesProfile.PROFILE);
 			BiomeProfileRegistry.register(PaleGardenProfile.PROFILE);
+		}
+
+
+		if (ModConfig.INSTANCE.NetherGrassRecolor){
 			BiomeEffects.register();
 		}
 
-		ModConfig.load();
 		QuadManager.register();
 
 
