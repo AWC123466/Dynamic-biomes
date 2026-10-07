@@ -167,7 +167,7 @@ public final class BiomeProfile {
 			if (targetBiome == null) throw new IllegalStateException("BiomeProfile " + id + " has no target biome");
 			if (priority < 1) throw new IllegalStateException("BiomeProfile " + id + " biome type is set incorrectly");
 			if (levels.isEmpty() && !allLevels) throw new IllegalStateException(".applicableDimensions was not called for BiomeProfile " + id);
-			if (parentBiome != null && parentBiomePriority<0) throw new IllegalStateException("Parent biome "+ id+ " doesnt have a set type");
+			if (parentBiome == null && parentBiomePriority<0) throw new IllegalStateException("Parent biome "+ id+ " doesnt have a set type");
 			return new BiomeProfile(this );
 		}
 	}

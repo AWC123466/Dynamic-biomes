@@ -62,6 +62,7 @@ public class DynamicBiomes implements ModInitializer {
 			BiomeProfileRegistry.register(NetherWastesProfile.PROFILE);
 			BiomeProfileRegistry.register(PaleGardenProfile.PROFILE);
 			BiomeProfileRegistry.register(DarkForestProfile.PROFILE);
+			BiomeProfileRegistry.register(LushCavesProfile.PROFILE);
 		}
 
 
