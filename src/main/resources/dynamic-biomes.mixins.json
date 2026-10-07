@@ -3,6 +3,7 @@
 	"package": "com.dynamicbiomes.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
+		"BiomeAccessor",
 		"LevelChunkMixin"
 	],
 	"injectors": {

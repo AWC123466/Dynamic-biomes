@@ -47,14 +47,15 @@ public final class DebugBiomeScores {
 		ClientLevel level = minecraft.level;
 		LocalPlayer player = minecraft.player;
 		long now = System.nanoTime();
-		Object2IntMap<Block> blockCount = getBlockCounts(level, player);
 		if (now - lastComputeNanos >= RECOMPUTE_INTERVAL_NANOS) {
+			lastComputeNanos = now;
 			if (level == null || player == null) {
 				DynamicBiomes.LOGGER.info("Dynamic Biomes: debug overlay has no client level/player yet");
-				return List.of();
+				cachedLines.clear();
+				return cachedLines;
 			}
 
-			lastComputeNanos = now;
+			Object2IntMap<Block> blockCount = getBlockCounts(level, player);
 			cachedLines.clear();
 			cachedLines.add("Dynamic biomes:");
 			for (BiomeProfile profile: BiomeProfileRegistry.getAll()){

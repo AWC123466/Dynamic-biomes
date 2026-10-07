@@ -68,6 +68,7 @@ public class DynamicBiomes implements ModInitializer {
 
 		if (ModConfig.INSTANCE.NetherGrassRecolor){
 			BiomeEffects.register();
+			ServerLifecycleEvents.SERVER_STARTING.register(BiomeEffects::refreshEffectsIdentity);
 		}
 
 		QuadManager.register();
