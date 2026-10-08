@@ -69,6 +69,39 @@ BiomeProfile.builder(DynamicBiomes.id("my_biome"))// id of the profile. two prof
 
 Register the result with `BiomeProfileRegistry`. See `src/main/java/com/dynamicbiomes/biome` for the built-in profiles.
 
+## Using the API in your mod
+
+Dynamic Biomes is published through [JitPack](https://jitpack.io/#AWC123466/Dynamic-biomes). 
+
+In your `build.gradle`:
+
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation "com.github.AWC123466:Dynamic-biomes:<VERSION>" // a release tag, e.g. 1.0.0
+}
+```
+
+If your project uses an older, remapping Loom (`fabric-loom` rather than `net.fabricmc.fabric-loom`), use `modImplementation` instead of `implementation`.
+
+***
+
+Then declare the dependency in your `fabric.mod.json` so Fabric checks it at launch:
+
+```json
+"depends": {
+  "dynamic-biomes": "*"
+}
+```
+## If you want the dependency to be...
+
+**Required,** put it under `depends`, as above. The game refuses to start with a clear "missing dependency" message if Dynamic Biomes isn't installed. `"*"` accepts any version; use something like `">=1.0.0"` to require a minimum.
+
+**Optional,** put it under `suggests` instead, and check `FabricLoader.getInstance().isModLoaded("dynamic-biomes")` before calling the API, so your mod still runs without it.
+
 ## License
 
 Copyright (C) 2026 AWC. Licensed under the [GNU LGPL v3.0](LICENSE). You can depend on this mod and use its API from your own mods, under any license. If you modify and distribute the mod itself, you must share your changes under the LGPL.
